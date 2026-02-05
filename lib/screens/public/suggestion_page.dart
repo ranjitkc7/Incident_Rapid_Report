@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:incident_response_app/widget/custom_button.dart';
+import '../../widget/custom_button.dart';
 import '../../service/suggestion_service.dart';
 import '../../model/suggestion_model.dart';
+
 
 class SuggestionPage extends StatefulWidget {
   const SuggestionPage({super.key});

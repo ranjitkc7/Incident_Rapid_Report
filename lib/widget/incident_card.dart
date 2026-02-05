@@ -1,16 +1,23 @@
+// ignore_for_file: depend_on_referenced_packages
+
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geolocator/geolocator.dart';
-import '../../utils/incident_util.dart';
+import 'package:incident_response_app/widget/custom_button.dart';
+import '../utils/calculate_distanceUtil.dart';
+import '../utils/time_formatterUtil.dart';
+import '../screens/volunteer/incident_map_screen.dart';
 
 class IncidentCard extends StatelessWidget {
   final Map<String, dynamic> incidentData;
   final Position? userPosition;
+  final bool isVolunteer;
 
   const IncidentCard({
     super.key,
     required this.incidentData,
     required this.userPosition,
+    required this.isVolunteer,
   });
 
   @override
@@ -149,6 +156,44 @@ class IncidentCard extends StatelessWidget {
                       ),
                     ],
                   ),
+                if (isVolunteer) ...[
+                  const SizedBox(height: 12),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: OutlinedButton.icon(
+                          label: const Text(
+                            "View Location",
+                            style: TextStyle(
+                              color: Color(0xFFD32F2F),
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          style: OutlinedButton.styleFrom(
+                            side: const BorderSide(color: Color(0xFFD32F2F)),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          onPressed: () {
+                            _showLocationBottomSheet(context);
+                          },
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: CustomButton(
+                          text: "Response",
+                          onPressed: () {},
+                          color: Colors.white,
+                          radius: 8,
+                          width: 100,
+                          bgColor: const Color(0xFFD32F2F),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ],
             ),
           ),
@@ -160,5 +205,66 @@ class IncidentCard extends StatelessWidget {
   String _formatTime(Timestamp timestamp) {
     DateTime dateTime = timestamp.toDate();
     return "${dateTime.day}/${dateTime.month}/${dateTime.year} ${dateTime.hour}:${dateTime.minute.toString().padLeft(2, '0')}";
+  }
+
+  void _showLocationBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (_) {
+        return Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+            top: 16,
+            left: 16,
+            right: 16,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                "Incident Location",
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 8),
+              Text("Address: ${incidentData["address"] ?? "N/A"}"),
+              const SizedBox(height: 6),
+              Text("Latitude: ${incidentData["latitude"]}"),
+              Text("Longitude: ${incidentData["longitude"]}"),
+              const SizedBox(height: 6),
+              Center(
+                child: ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFFD32F2F),
+                  ),
+                  icon: const Icon(Icons.navigation, color: Colors.white),
+                  label: const Text(
+                    "Open in Maps",
+                    style: TextStyle(color: Colors.white, fontSize: 16),
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => IncidentMapScreen(
+                          incidentLatitude: incidentData["latitude"],
+                          incidentLongitude: incidentData["longitude"],
+                          userPosition: userPosition!,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+              const SizedBox(height: 50),
+            ],
+          ),
+        );
+      },
+    );
   }
 }

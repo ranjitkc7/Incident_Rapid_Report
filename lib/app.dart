@@ -4,7 +4,7 @@ import 'screens/admin/admin_home_screen.dart';
 import 'screens/public/public_home_screen.dart';
 import 'screens/select_role.dart';
 import 'screens/splash_screen.dart';
-import 'screens/volunteer/volunteer_home_screen.dart';
+import 'screens/volunteer/volunteer_login_screen.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
         '/': (context) => const SplashScreen(),
         '/role': (context) => const SelectRole(),
         '/public': (context) => const PublicHomeScreen(),
-        '/volunteer': (context) => const VolunteerHomeScreen(),
+        '/volunteer': (context) => const VolunteerLoginScreen(),
         '/admin': (context) => const AdminSuggestionScreen(),
       },
     );

@@ -85,4 +85,5 @@ class DefaultFirebaseOptions {
     storageBucket: 'rapid-report-bdfe6.firebasestorage.app',
     measurementId: 'G-0D0V1WK91N',
   );
+
 }

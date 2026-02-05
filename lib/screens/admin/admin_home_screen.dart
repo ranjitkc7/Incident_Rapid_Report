@@ -1,5 +1,8 @@
+// ignore_for_file: depend_on_referenced_packages
+
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '../../utils/time_formatterUtil.dart';
 
 class AdminSuggestionScreen extends StatefulWidget {
   const AdminSuggestionScreen({super.key});
@@ -9,16 +12,7 @@ class AdminSuggestionScreen extends StatefulWidget {
 }
 
 class _AdminSuggestionScreenState extends State<AdminSuggestionScreen> {
-  String _timeAgo(Timestamp timestamp) {
-    final diff = DateTime.now().difference(timestamp.toDate());
-
-    if (diff.inSeconds < 1) return "Just now";
-    if (diff.inMinutes < 1) return "${diff.inSeconds} sec ago";
-    if (diff.inMinutes < 60) return "${diff.inMinutes} min ago";
-    if (diff.inHours < 24) return "${diff.inHours} hr ago";
-    return "${diff.inDays} day${diff.inDays > 1 ? 's' : ''} ago";
-  }
-
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,7 +54,7 @@ class _AdminSuggestionScreenState extends State<AdminSuggestionScreen> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
-                color: Colors.red.shade50, // background color
+                color: Colors.red.shade50, 
                 child: ExpansionTile(
                   collapsedBackgroundColor: const Color.fromARGB(255, 249, 239, 240),
                   backgroundColor: Colors.white,
@@ -77,7 +71,7 @@ class _AdminSuggestionScreenState extends State<AdminSuggestionScreen> {
                         fontWeight: FontWeight.bold, fontSize: 16),
                   ),
                   subtitle: Text(
-                    createdAt != null ? _timeAgo(createdAt) : "Unknown",
+                    createdAt != null ? timeAgoFormat(createdAt) : "Unknown",
                     style: const TextStyle(fontSize: 12),
                   ),
                   childrenPadding:

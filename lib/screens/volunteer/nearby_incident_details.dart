@@ -4,14 +4,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:incident_response_app/widget/incident_card.dart';
 import 'package:geolocator/geolocator.dart';
 
-class NearbyIncidentScreen extends StatefulWidget {
-  const NearbyIncidentScreen({super.key});
+class NearbyIncidentDetailsScreen extends StatefulWidget {
+  const NearbyIncidentDetailsScreen({super.key});
 
   @override
-  State<NearbyIncidentScreen> createState() => _NearbyIncidentScreenState();
+  State<NearbyIncidentDetailsScreen> createState() => _NearbyIncidentDetailsScreenState();
 }
 
-class _NearbyIncidentScreenState extends State<NearbyIncidentScreen> {
+class _NearbyIncidentDetailsScreenState extends State<NearbyIncidentDetailsScreen> {
   Position? currentPosition;
 
   @override
@@ -52,7 +52,7 @@ class _NearbyIncidentScreenState extends State<NearbyIncidentScreen> {
           style: TextStyle(color: Colors.white),
         ),
         backgroundColor: const Color(0xFFD32F2F),
-        centerTitle: true,
+       
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
@@ -78,7 +78,7 @@ class _NearbyIncidentScreenState extends State<NearbyIncidentScreen> {
               return IncidentCard(
                 incidentData: incidentData,
                 userPosition: currentPosition,
-                isVolunteer: false,
+                isVolunteer: true,
               );
             },
           );
