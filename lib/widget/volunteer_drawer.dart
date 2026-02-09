@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:incident_response_app/screens/volunteer/add_volunteerPage.dart';
+import 'package:incident_response_app/screens/volunteer/volunteer_data_page.dart';
 import 'package:incident_response_app/screens/volunteer/volunteer_login_screen.dart';
 import '../../screens/volunteer/nearby_incident_details.dart';
 import 'custom_listTile.dart';
@@ -80,6 +81,18 @@ class VolunteerDrawer extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (_) => AddVolunteerPage()),
+              );
+            },
+          ),
+           CustomListTile(
+            icon: Icons.data_array,
+            title: "Show Volunteer",
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const VolunteerDataPage(),
+                ),
               );
             },
           ),

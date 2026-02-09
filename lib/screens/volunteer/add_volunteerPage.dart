@@ -1,6 +1,10 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
+import 'package:incident_response_app/model/volunteer_model.dart';
+import 'package:incident_response_app/screens/volunteer/dropdown_field.dart';
+import 'package:incident_response_app/screens/volunteer/volunteer_data_page.dart';
+import 'package:incident_response_app/service/volunteer_data_service.dart';
 import 'package:incident_response_app/widget/custom_button.dart';
 import 'package:incident_response_app/widget/custom_formField.dart';
 
@@ -16,6 +20,48 @@ class _AddVolunteerPageState extends State<AddVolunteerPage> {
   final numberController = TextEditingController();
   final fieldController = TextEditingController();
   String? selectedField;
+
+  Future<void> _addVolunteer() async {
+    if (nameController.text.trim().isEmpty ||
+        numberController.text.trim().isEmpty ||
+        selectedField == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Please fill all fields"),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    try {
+      await VolunteerDataService.addVolunteer(
+        VolunteerModel(
+          volunteerName: nameController.text.trim(),
+          volunteerNumber: numberController.text.trim(),
+          volunteerField: selectedField!,
+        ),
+      );
+      nameController.clear();
+      numberController.clear();
+      fieldController.clear();
+
+      setState(() {
+        selectedField = null;
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Volunteer added successfully"),
+          backgroundColor: Colors.green,
+        ),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error: $e"), backgroundColor: Colors.red),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -85,19 +131,17 @@ class _AddVolunteerPageState extends State<AddVolunteerPage> {
                       controller: numberController,
                       keyboardType: TextInputType.phone,
                     ),
-
                     const SizedBox(height: 10),
-                    CustomFormField(
-                      label: "Field / Expertise",
-                      icon: Icons.work_outline,
-                      obscureText: false,
-                      controller: fieldController,
-                      keyboardType: TextInputType.text,
+                    DropdownField(
+                      value: selectedField,
+                      onChange: (value) {
+                        setState(() {
+                          selectedField = value;
+                          fieldController.text = value ?? "";
+                        });
+                      },
                     ),
-
                     const SizedBox(height: 22),
-
-                    /// Buttons
                     Row(
                       children: [
                         Expanded(
@@ -123,7 +167,7 @@ class _AddVolunteerPageState extends State<AddVolunteerPage> {
                         Expanded(
                           child: CustomButton(
                             text: "Save",
-                            onPressed: () {},
+                            onPressed: _addVolunteer,
                             color: Colors.white,
                             radius: 10,
                             width: double.infinity,
@@ -135,7 +179,14 @@ class _AddVolunteerPageState extends State<AddVolunteerPage> {
                     const SizedBox(height: 20),
                     CustomButton(
                       text: "Show Volunteer",
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => VolunteerDataPage(),
+                          ),
+                        );
+                      },
                       color: Colors.white,
                       radius: 12,
                       width: double.infinity,
