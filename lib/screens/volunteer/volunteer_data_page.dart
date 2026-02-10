@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../model/volunteer_model.dart';
 import '../../widget/listTile_for_volunteer.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class VolunteerDataPage extends StatefulWidget {
   const VolunteerDataPage({super.key});
@@ -11,6 +12,24 @@ class VolunteerDataPage extends StatefulWidget {
 }
 
 class _VolunteerDataPageState extends State<VolunteerDataPage> {
+  Future<void> _makePhoneCall(String phoneNumber) async {
+    final Uri callUri = Uri(scheme: "tel", path: phoneNumber);
+
+    if (await canLaunchUrl(callUri)) {
+      await launchUrl(callUri);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Could not make a call',
+            style: TextStyle(color: Colors.white),
+          ),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,7 +62,9 @@ class _VolunteerDataPageState extends State<VolunteerDataPage> {
                 icon: _getIcon(volunteer.volunteerField),
                 subtitle: volunteer.volunteerNumber,
                 title: volunteer.volunteerName,
-                onTap: () {},
+                onTap: () {
+                  _makePhoneCall(volunteer.volunteerNumber);
+                },
               );
             },
           );
